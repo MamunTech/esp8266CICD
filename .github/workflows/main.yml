@@ -51,6 +51,12 @@ jobs:
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         VERSION: ${{ env.VERSION }}
       run: |
+      
+        echo "FTP Server: $FTP_SERVER"
+        echo "FTP Username: $FTP_USERNAME"
+        echo "Version: $VERSION"
+
+
         if [ -f ./output/esp8266CICD.ino.bin ]; then 
           curl -T ./output/esp8266CICD.ino.bin ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
           curl -T version.txt ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
