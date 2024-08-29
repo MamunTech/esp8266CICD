@@ -52,7 +52,7 @@ jobs:
         VERSION: ${{ env.VERSION }}
       run: |
         if [ -f ./output/esp8266CICD.ino.bin ]; then 
-          curl -T ./output/esp8266CICD.ino.bin ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
+          curl -T ./output/esp8266CICD.bin ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
           curl -T version.txt ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
         else 
           echo "esp8266CICD.ino.bin file not found. Skipping upload.";
