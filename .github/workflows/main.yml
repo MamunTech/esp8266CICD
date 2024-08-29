@@ -33,8 +33,8 @@ jobs:
         
     - name: Install ESP8266 core
       run: |
-        ./bin/arduino-cli core update-index
-        ./bin/arduino-cli core install esp8266:esp8266
+        arduino-cli core update-index
+        arduino-cli core install esp8266:esp8266
         
 
     - name: Compile Arduino Blink Sketch
