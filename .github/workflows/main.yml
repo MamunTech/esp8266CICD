@@ -1,0 +1,65 @@
+name: Deploy Arduino Blink Sketch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: List files in the repository
+      run: |
+        echo "Listing files in the repository..."
+        ls -R
+        
+    - name: Install AVR GCC Tools
+      run: sudo apt-get install -y gcc-avr binutils-avr avr-libc
+      
+    - name: Set up Arduino CLI
+      uses: arduino/setup-arduino-cli@v1
+      with:
+        version: 0.31.0
+
+    - name: Install Arduino Core
+      run: |
+        arduino-cli core update-index
+        arduino-cli core install arduino:avr
+        
+    - name: Install ESP8266 core
+      run: |
+        ./bin/arduino-cli core update-index
+        ./bin/arduino-cli core install esp8266:esp8266
+        
+
+    - name: Compile Arduino Blink Sketch
+      run: |
+        arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./output esp8266CICD.ino
+
+    - name: Convert HEX to BIN
+      run: |
+        avr-objcopy -I ihex ./output/gitCICD.ino.hex -O binary ./output/esp8266CICD.ino.bin
+
+    - name: Get version number
+      id: get_version
+      run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+    - name: Upload bin file and version to Hostinger
+      env:
+        FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        VERSION: ${{ env.VERSION }}
+      run: |
+        if [ -f ./output/esp8266CICD.ino.bin ]; then 
+          curl -T ./output/esp8266CICD.ino.bin ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
+          curl -T version.txt ftp://$FTP_SERVER/ --user $FTP_USERNAME:$FTP_PASSWORD;
+        else 
+          echo "gitCICD.ino.bin file not found. Skipping upload.";
+          exit 1;
+        fi
