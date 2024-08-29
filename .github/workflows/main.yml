@@ -13,31 +13,29 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: List files in the repository
-      run: |
-        echo "Listing files in the repository..."
-        ls -R
-        
     - name: Set up Arduino CLI
       uses: arduino/setup-arduino-cli@v1
       with:
         version: 0.31.0
 
+    - name: Initialize Arduino CLI Configuration
+      run: |
+        mkdir -p ~/.arduino15
+        echo "{}" > ~/.arduino15/arduino-cli.yaml
+
     - name: Add board manager URL for ESP8266
       run: |
         arduino-cli config add board_manager.additional_urls https://arduino.esp8266.com/stable/package_esp8266com_index.json
 
-    - name: List available Arduino cores
-      run: |
-        arduino-cli core list
+    - name: Update Arduino CLI core index
+      run: arduino-cli core update-index -v
+
+    - name: List available Arduino platforms
+      run: arduino-cli core list
 
     - name: Install ESP8266 core
-      run: |
-        arduino-cli core install esp8266:esp8266 -v
-        
-    - name: List installed Arduino cores
-      run: arduino-cli core list
-      
+      run: arduino-cli core install esp8266:esp8266 -v
+
     - name: Compile Arduino Sketch for ESP8266
       run: |
         arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./output esp8266CICD.ino
