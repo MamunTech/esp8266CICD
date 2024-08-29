@@ -34,7 +34,10 @@ jobs:
     - name: Install ESP8266 core
       run: |
         arduino-cli core install esp8266:esp8266 -v
-
+        
+    - name: List installed Arduino cores
+      run: arduino-cli core list
+      
     - name: Compile Arduino Sketch for ESP8266
       run: |
         arduino-cli compile --fqbn esp8266:esp8266:generic --output-dir ./output esp8266CICD.ino
