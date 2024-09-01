@@ -13,8 +13,10 @@ const char* version_url = "/version.txt";
 
 String currentVersion = "0.0.0.1";
 
+const int ledPin = LED_BUILTIN;  // On most ESP8266 boards, the built-in LED is connected to this pin
+
 void setup() {
-  const int ledPin = LED_BUILTIN;  // On most ESP8266 boards, the built-in LED is connected to this pin
+  pinMode(ledPin, OUTPUT);
   
   Serial.begin(115200);
   WiFi.begin(ssid, password);
