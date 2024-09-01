@@ -36,7 +36,7 @@ void loop() {
   digitalWrite(ledPin, LOW); // Turn LED on (LOW means LED on for most ESP8266 boards)
   delay(1000);               // Wait for 1 second
   digitalWrite(ledPin, HIGH); // Turn LED off
-  delay(1000);               // Wait for 1 second
+  delay(100);               // Wait for 1 second
 }
 
 void checkForUpdate() {
