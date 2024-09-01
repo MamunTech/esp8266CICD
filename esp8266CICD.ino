@@ -14,6 +14,8 @@ const char* version_url = "/version.txt";
 String currentVersion = "0.0.0.1";
 
 void setup() {
+  const int ledPin = LED_BUILTIN;  // On most ESP8266 boards, the built-in LED is connected to this pin
+  
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   
@@ -29,7 +31,10 @@ void setup() {
 }
 
 void loop() {
-  // Your main code here
+  digitalWrite(ledPin, LOW); // Turn LED on (LOW means LED on for most ESP8266 boards)
+  delay(1000);               // Wait for 1 second
+  digitalWrite(ledPin, HIGH); // Turn LED off
+  delay(1000);               // Wait for 1 second
 }
 
 void checkForUpdate() {
